@@ -1,0 +1,40 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>com.github.sorinflorea.runconfigextras</id>
+    <name>Run Configuration Extras</name>
+    <vendor>Sorin Florea</vendor>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <actions>
+        <action id="RunConfigExtras.RunNewConfigurationAction"
+                class="com.github.sorinflorea.runconfigextras.actions.RunNewConfigAction"
+                text="Run New Configuration"
+                description="Run with a new configuration.">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt shift R"/>
+            <add-to-group group-id="RunContextGroupInner" anchor="after" relative-to-action="DebugClass"/>
+        </action>
+        <action id="RunConfigExtras.DebugNewConfigurationAction"
+                class="com.github.sorinflorea.runconfigextras.actions.DebugNewConfigAction"
+                text="Debug New Configuration"
+                description="Debug with a new configuration.">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt shift D"/>
+            <add-to-group group-id="RunContextGroupInner" anchor="after"
+                          relative-to-action="RunConfigExtras.RunNewConfigurationAction"/>
+        </action>
+        <action id="RunConfigExtras.CleanupTemporaryConfigurations"
+                class="com.github.sorinflorea.runconfigextras.actions.CleanupConfigAction"
+                text="Remove All Temporary Run/Debug Configurations"
+                description="Removes all temporary run configurations.">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt shift C"/>
+        </action>
+    </actions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <runLineMarkerContributor language="JVM"
+                                  id="RunConfigExtras.RunNewConfigurationActionContributor"
+                                  order="last"
+                                  implementationClass="com.github.sorinflorea.runconfigextras.actions.RunNewConfigMarkerContributor"/>
+    </extensions>
+</idea-plugin>
