@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [1.0.4]
+### Added
+- Update compatibility
+
+## [1.0.3]
+### Added
+- Update compatibility
+
 ## [1.0.2]
 ### Added
 - Update compatibility
