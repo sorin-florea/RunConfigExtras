@@ -10,6 +10,6 @@ class RunNewConfigMarkerContributor : RunLineMarkerContributor() {
     override fun getInfo(element: PsiElement): Info {
         val runAction = ActionManager.getInstance().getAction("RunConfigExtras.RunNewConfigurationAction")
         val debugAction = ActionManager.getInstance().getAction("RunConfigExtras.DebugNewConfigurationAction")
-        return Info(debugAction.templatePresentation.icon, null, runAction, debugAction)
+        return Info(debugAction.templatePresentation.icon, arrayOf(runAction, debugAction), null)
     }
 }

@@ -1,6 +1,7 @@
 package com.github.sorinflorea.runconfigextras.actions
 
 import com.intellij.execution.RunManagerEx
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 
@@ -21,5 +22,9 @@ class CleanupConfigAction : AnAction() {
 
     override fun update(event: AnActionEvent) {
         event.presentation.isEnabledAndVisible = event.project != null
+    }
+
+    override fun getActionUpdateThread(): ActionUpdateThread {
+        return ActionUpdateThread.BGT
     }
 }

@@ -3,18 +3,17 @@ package com.github.sorinflorea.runconfigextras.actions
 import com.intellij.execution.RunnerAndConfigurationSettings
 import com.intellij.execution.actions.ConfigurationContext
 import com.intellij.execution.actions.RunContextAction
+import com.intellij.openapi.actionSystem.ActionUpdateThreadAware
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.UpdateInBackground
 import com.intellij.openapi.util.IconLoader
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.jvm.isAccessible
 
-abstract class BaseRunConfigAction : AnAction(), UpdateInBackground {
+abstract class BaseRunConfigAction : AnAction(), ActionUpdateThreadAware {
 
     override fun update(event: AnActionEvent) {
         val runAction = getAction(event)
-        runAction?.update(event)
 
         runAction?.let {
             event.presentation.icon = IconLoader.createLazy {
@@ -34,14 +33,15 @@ abstract class BaseRunConfigAction : AnAction(), UpdateInBackground {
     }
 
     class DelegatingRunContextAction(private val delegate: RunContextAction) : RunContextAction(delegate.executor) {
-        override fun findExisting(context: ConfigurationContext?): RunnerAndConfigurationSettings? {
+        override fun findExisting(context: ConfigurationContext): RunnerAndConfigurationSettings? {
             return null
         }
 
-        override fun perform(context: ConfigurationContext?) {
-            val perform = RunContextAction::class.memberFunctions.find { it.name == "perform" }
+        override fun perform(configuration: RunnerAndConfigurationSettings, context: ConfigurationContext) {
+            val perform =
+                RunContextAction::class.memberFunctions.find { it.name == "perform" && it.parameters.size == 3 }
             perform!!.isAccessible = true
-            perform.call(delegate, context)
+            perform.call(delegate, configuration, context)
         }
     }
 

@@ -67,8 +67,8 @@ tasks {
 
     patchPluginXml {
         version.set(properties("pluginVersion"))
-        sinceBuild.set("222")
-        untilBuild.set("233.*")
+        sinceBuild.set("242")
+        untilBuild.set("299.*")
 
         // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
         pluginDescription.set(
@@ -109,12 +109,12 @@ tasks {
         password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
     }
 
-    publishPlugin {
-        dependsOn("patchChangelog")
-        token.set(System.getenv("PUBLISH_TOKEN"))
-        // pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
-        // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
-        // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
-        channels.set(listOf(properties("pluginVersion").split('-').getOrElse(1) { "default" }.split('.').first()))
-    }
+//    publishPlugin {
+//        dependsOn("patchChangelog")
+//        token.set(System.getenv("PUBLISH_TOKEN"))
+//        // pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
+//        // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
+//        // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
+//        channels.set(listOf(properties("pluginVersion").split('-').getOrElse(1) { "default" }.split('.').first()) as List<String>)
+//    }
 }
