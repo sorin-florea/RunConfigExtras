@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [1.0.9]
+### Added
+- Update compatibility
+
 ## [1.0.8]
 ### Added
 - Remove usage of deprecated APIs

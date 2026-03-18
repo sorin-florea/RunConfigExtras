@@ -7,15 +7,11 @@ plugins {
     // Java support
     id("java")
     // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.9.0"
+    id("org.jetbrains.kotlin.jvm") version "2.2.0"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.15.0"
+    id("org.jetbrains.intellij.platform") version "2.7.0"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "2.1.1"
-    // Gradle Qodana Plugin
-    id("org.jetbrains.qodana") version "0.1.13"
-    // Gradle Kover Plugin
-//    id("org.jetbrains.kotlinx.kover") version "0.6.1"
 }
 
 group = properties("pluginGroup")
@@ -24,21 +20,63 @@ version = properties("pluginVersion")
 // Configure project's dependencies
 repositories {
     mavenCentral()
+    intellijPlatform {
+        intellijDependencies()
+        localPlatformArtifacts()
+
+        jetbrainsIdeInstallers()
+        releases()
+        jetbrainsRuntime()
+    }
+}
+
+dependencies {
+    intellijPlatform {
+        intellijIdeaCommunity("2025.1")
+        bundledPlugin("com.intellij.java")
+        bundledPlugin("com.intellij.gradle")
+        bundledPlugin("org.jetbrains.plugins.gradle")
+    }
 }
 
 // Set the JVM language level used to build project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 // Configure Gradle IntelliJ Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-intellij {
-    pluginName.set(properties("pluginName"))
-    version.set(properties("platformVersion"))
-    type.set(properties("platformType"))
+//intellij {
+//    pluginName.set(properties("pluginName"))
+//    version.set(properties("platformVersion"))
+//    type.set(properties("platformType"))
+//
+//    // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
+//    plugins.set(properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty))
+//}
 
-    // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
-    plugins.set(properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty))
+intellijPlatform {
+//    pluginConfiguration {
+//        description = providers.fileContents(layout.projectDirectory.file("PLUGIN_DESCRIPTION.md")).asText.map(::markdownToHTML)
+//        changeNotes = providers.fileContents(layout.projectDirectory.file("CHANGELOG.md")).asText.map(::markdownToHTML)
+//    }
+    projectName = properties("pluginName")
+    pluginConfiguration {
+        id = properties("pluginGroup")
+        name = properties("pluginName")
+        version = provider { properties("pluginVersion") }
+        vendor.apply {
+            name = "Sorin Florea"
+        }
+        ideaVersion {
+            sinceBuild = "251"
+        }
+    }
 }
 
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
@@ -47,13 +85,13 @@ changelog {
     repositoryUrl.set(properties("pluginRepositoryUrl"))
 }
 
-// Configure Gradle Qodana Plugin - read more: https://github.com/JetBrains/gradle-qodana-plugin
-qodana {
-    cachePath.set(file(".qodana").canonicalPath)
-    reportPath.set(file("build/reports/inspections").canonicalPath)
-    saveReport.set(true)
-    showReport.set(System.getenv("QODANA_SHOW_REPORT")?.toBoolean() ?: false)
-}
+//// Configure Gradle Qodana Plugin - read more: https://github.com/JetBrains/gradle-qodana-plugin
+//qodana {
+//    cachePath.set(file(".qodana").canonicalPath)
+//    reportPath.set(file("build/reports/inspections").canonicalPath)
+//    saveReport.set(true)
+//    showReport.set(System.getenv("QODANA_SHOW_REPORT")?.toBoolean() ?: false)
+//}
 
 //// Configure Gradle Kover Plugin - read more: https://github.com/Kotlin/kotlinx-kover#configuration
 //kover.xmlReport {
@@ -66,10 +104,8 @@ tasks {
     }
 
     patchPluginXml {
-        version.set(properties("pluginVersion"))
-        sinceBuild.set("242")
-        untilBuild.set("299.*")
-
+//        version.set(properties("pluginVersion"))
+//        sinceBuild.set("242")
         // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
         pluginDescription.set(
             file("README.md").readText().lines().run {
@@ -94,20 +130,20 @@ tasks {
         })
     }
 
-    // Configure UI tests plugin
-    // Read more: https://github.com/JetBrains/intellij-ui-test-robot
-    runIdeForUiTests {
-        systemProperty("robot-server.port", "8082")
-        systemProperty("ide.mac.message.dialogs.as.sheets", "false")
-        systemProperty("jb.privacy.policy.text", "<!--999.999-->")
-        systemProperty("jb.consents.confirmation.enabled", "false")
-    }
+//    // Configure UI tests plugin
+//    // Read more: https://github.com/JetBrains/intellij-ui-test-robot
+//    runIdeForUiTests {
+//        systemProperty("robot-server.port", "8082")
+//        systemProperty("ide.mac.message.dialogs.as.sheets", "false")
+//        systemProperty("jb.privacy.policy.text", "<!--999.999-->")
+//        systemProperty("jb.consents.confirmation.enabled", "false")
+//    }
 
-    signPlugin {
-        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
-        privateKey.set(System.getenv("PRIVATE_KEY"))
-        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
-    }
+//    signPlugin {
+//        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
+//        privateKey.set(System.getenv("PRIVATE_KEY"))
+//        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
+//    }
 
 //    publishPlugin {
 //        dependsOn("patchChangelog")
