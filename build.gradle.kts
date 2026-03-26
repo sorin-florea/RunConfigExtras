@@ -1,5 +1,6 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 fun properties(key: String) = project.findProperty(key).toString()
 
@@ -36,6 +37,7 @@ dependencies {
         bundledPlugin("com.intellij.java")
         bundledPlugin("com.intellij.gradle")
         bundledPlugin("org.jetbrains.plugins.gradle")
+        testFramework(TestFrameworkType.JUnit5)
     }
 }
 
