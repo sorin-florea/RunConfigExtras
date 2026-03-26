@@ -39,6 +39,7 @@ dependencies {
         bundledPlugin("org.jetbrains.plugins.gradle")
         testFramework(TestFrameworkType.JUnit5)
     }
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.0")
 }
 
 // Set the JVM language level used to build project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.
