@@ -43,5 +43,10 @@
                 instance="com.github.sorinflorea.runconfigextras.settings.PluginConfigurable"
                 id="RunConfigExtras.Settings"
                 displayName="Run Configuration Extras"/>
+        <projectConfigurable
+                parentId="RunConfigExtras.Settings"
+                instance="com.github.sorinflorea.runconfigextras.rules.TestRulesConfigurable"
+                id="RunConfigExtras.TestRules"
+                displayName="Test Rules"/>
     </extensions>
 </idea-plugin>
