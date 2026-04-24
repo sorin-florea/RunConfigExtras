@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [1.1.0]
+### Added
+- Test Rules: project-level settings with an editable table for defining rules that are automatically applied to newly created Gradle run configurations
+- Include the Gradle task name in generated run configuration names
+
 ## [1.0.9]
 ### Added
 - Update compatibility

@@ -80,6 +80,11 @@ intellijPlatform {
             sinceBuild = "251"
         }
     }
+    pluginVerification {
+        ides {
+            ide("IC", "2025.1")
+        }
+    }
 }
 
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
