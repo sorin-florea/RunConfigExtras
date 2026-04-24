@@ -1,5 +1,6 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 fun properties(key: String) = project.findProperty(key).toString()
 
@@ -36,7 +37,9 @@ dependencies {
         bundledPlugin("com.intellij.java")
         bundledPlugin("com.intellij.gradle")
         bundledPlugin("org.jetbrains.plugins.gradle")
+        testFramework(TestFrameworkType.JUnit5)
     }
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.0")
 }
 
 // Set the JVM language level used to build project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.

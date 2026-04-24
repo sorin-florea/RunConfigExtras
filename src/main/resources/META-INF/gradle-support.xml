@@ -1,3 +1,10 @@
 <idea-plugin>
-    <!-- Extensions activated when the Gradle plugin is present -->
+    <extensions defaultExtensionNs="com.intellij">
+        <projectService
+                serviceImplementation="com.github.sorinflorea.runconfigextras.rules.TestRulesSettings"/>
+    </extensions>
+    <projectListeners>
+        <listener class="com.github.sorinflorea.runconfigextras.rules.TestRulesListener"
+                  topic="com.intellij.execution.RunManagerListener"/>
+    </projectListeners>
 </idea-plugin>
