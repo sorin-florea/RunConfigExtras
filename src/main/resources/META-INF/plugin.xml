@@ -5,6 +5,8 @@
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.java</depends>
+    <depends optional="true" config-file="gradle-support.xml">com.intellij.gradle</depends>
+
     <actions>
         <action id="RunConfigExtras.RunNewConfigurationAction"
                 class="com.github.sorinflorea.runconfigextras.actions.RunNewConfigAction"
@@ -34,5 +36,12 @@
                                   id="RunConfigExtras.RunNewConfigurationActionContributor"
                                   order="last"
                                   implementationClass="com.github.sorinflorea.runconfigextras.actions.RunNewConfigMarkerContributor"/>
+        <applicationService
+                serviceImplementation="com.github.sorinflorea.runconfigextras.settings.PluginSettings"/>
+        <applicationConfigurable
+                parentId="tools"
+                instance="com.github.sorinflorea.runconfigextras.settings.PluginConfigurable"
+                id="RunConfigExtras.Settings"
+                displayName="Run Configuration Extras"/>
     </extensions>
 </idea-plugin>

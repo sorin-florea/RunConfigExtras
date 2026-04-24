@@ -1,14 +1,17 @@
 package com.github.sorinflorea.runconfigextras.actions
 
+import com.intellij.execution.ProgramRunnerUtil
+import com.intellij.execution.RunManagerEx
 import com.intellij.execution.RunnerAndConfigurationSettings
 import com.intellij.execution.actions.ConfigurationContext
 import com.intellij.execution.actions.RunContextAction
 import com.intellij.openapi.actionSystem.ActionUpdateThreadAware
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.externalSystem.service.execution.ExternalSystemRunConfiguration
 import com.intellij.openapi.util.IconLoader
-import kotlin.reflect.full.memberFunctions
-import kotlin.reflect.jvm.isAccessible
+import com.github.sorinflorea.runconfigextras.ConfigNaming
+import com.github.sorinflorea.runconfigextras.settings.PluginSettings
 
 abstract class BaseRunConfigAction : AnAction(), ActionUpdateThreadAware {
 
@@ -38,10 +41,25 @@ abstract class BaseRunConfigAction : AnAction(), ActionUpdateThreadAware {
         }
 
         override fun perform(configuration: RunnerAndConfigurationSettings, context: ConfigurationContext) {
-            val perform =
-                RunContextAction::class.memberFunctions.find { it.name == "perform" && it.parameters.size == 3 }
-            perform!!.isAccessible = true
-            perform.call(delegate, configuration, context)
+            val project = context.project ?: return
+            val runManager = RunManagerEx.getInstanceEx(project)
+            val replaceDifferentTask = PluginSettings.instance.state.replaceExistingConfig
+
+            val targetName = ConfigNaming.computeTargetBaseName(configuration)
+            if (targetName != null) {
+                ConfigNaming.resolveTargetName(targetName, runManager, replaceDifferentTask)
+
+                val originalConfig = configuration.configuration as ExternalSystemRunConfiguration
+                val clonedConfig = originalConfig.clone()
+                clonedConfig.name = targetName
+                val cloned = runManager.createConfiguration(clonedConfig, originalConfig.factory!!)
+                cloned.isTemporary = true
+                runManager.addConfiguration(cloned)
+                runManager.selectedConfiguration = cloned
+                ProgramRunnerUtil.executeConfiguration(cloned, delegate.executor)
+            } else {
+                super.perform(configuration, context)
+            }
         }
     }
 
